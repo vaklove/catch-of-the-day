@@ -1,10 +1,12 @@
 import React from "react";
 import { formatPrice } from "../helpers";
-class Order extends React.Component {
+class Order extends React.Component { 
   renderOrder = key => {
     const fish = this.props.fishes[key];
     const count = this.props.order[key];
-    const isAvailable = fish.status === "available";
+    const isAvailable = fish && fish.status === "available";
+    if (!fish) return null;
+
     if (!isAvailable) {
       return (
         <li key={key}>
@@ -14,8 +16,9 @@ class Order extends React.Component {
     }
     return (
       <li key={key}>
-        {count} lbs {fish.name}
+        {count} lb {fish.name}
         {formatPrice(count * fish.price)}
+        <button onClick={() => this.props.deleteFromOrder(key)}>&times;</button>
       </li>
     );
   };
@@ -35,7 +38,7 @@ class Order extends React.Component {
         <h2>Order!!!</h2>
         <ul className="order">{orderids.map(this.renderOrder)}</ul>
         <div className="total">
-          Total: 
+          Total:
           <strong>{formatPrice(total)}</strong>
         </div>
       </div>
